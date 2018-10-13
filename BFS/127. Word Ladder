@@ -1,0 +1,33 @@
+超时问题,  
+
+class Solution {
+
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Set<String> queue=new HashSet<>();
+        Set<String> wordSet=new HashSet<>(wordList); //解决用list.contains 查找超时问题
+        int count=0,wordLength=beginWord.length();
+        List<Integer> nextLevel=new ArrayList<>();
+        queue.add(beginWord);
+        while(!queue.contains(endWord)){
+            Set<String> queueTmp=new HashSet<>();
+            for(String beginChar: queue){
+                for(int i=0; i<beginChar.length(); i++){
+                    char[] tmpChar=beginChar.toCharArray();
+                    for(char j='a'; j<='z';j++){   //改查看整个list匹配的单词到，只改变每一位的letter在查看wordSet中有没有，list长为L，单词长度n，时间复杂度从L^L将为(26n)^L
+                        tmpChar[i]=j;
+                        String addTmp=new String(tmpChar);
+                        if(wordSet.contains(addTmp)){//解决用list.contains 查找超时问题
+                            queueTmp.add(addTmp);
+                            wordSet.remove(addTmp);
+                        }
+                    }
+                }
+            }
+            count++;
+            if(queueTmp.isEmpty()) return 0;//解决[hot,cog] 的超时问题
+            queue=queueTmp;
+        }
+        return count+1;
+    }
+    
+}
